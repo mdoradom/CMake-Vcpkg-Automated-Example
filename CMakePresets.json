@@ -10,11 +10,11 @@
         "name": "default",
         "hidden": true,
         "description": "Use this preset as a base for other presets",
-        "binaryDir": "${sourceDir}/build",
+        "binaryDir": "${env.VCPKG_ROOT}/build",
         "cacheVariables": {
           "CMAKE_TOOLCHAIN_FILE": {
             "type": "FILEPATH",
-            "value": "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            "value": "${env.VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
           },
           "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
         }
