@@ -10,7 +10,7 @@
         "name": "default",
         "hidden": true,
         "description": "Use this preset as a base for other presets",
-        "binaryDir": "${sourceDir}/build/${presetName}",
+        "binaryDir": "${sourceDir}/build",
         "cacheVariables": {
           "CMAKE_TOOLCHAIN_FILE": {
             "type": "FILEPATH",
@@ -38,5 +38,4 @@
         }
       }
     ]
-  }
-  
+}
