@@ -1,41 +1,49 @@
-name: Build and Deploy
+name: CMake with Vcpkg on multiple platforms
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
-    name: Build, Test, and Deploy
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        build_type: [Release]
+        c_compiler: [gcc, clang, cl]
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - name: Install Vcpkg
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Install Vcpkg Dependencies
+      if: matrix.os == 'ubuntu-latest'
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg
         ./bootstrap-vcpkg.sh
+        ./vcpkg install $(jq -r '.dependencies[] | select(type=="string")' vcpkg.json)
 
-    - name: Install Dependencies
-      run: |
-        ./vcpkg/vcpkg install $(jq -r '.dependencies[] | select(type=="string")' vcpkg.json)
+    - name: Configure CMake
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ github.workspace }}
 
-    - name: Build and Test
-      run: |
-        mkdir build
-        cd build
-        cmake ..
-        cmake --build .
-        ctest --verbose
+    - name: Build
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-    - name: Deploy to GitHub Releases
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          ./build/Vcpkg-Project-Example
-        token: ${{ secrets.GITHUB_TOKEN }}
-        release_name: Release ${{ github.sha }}
+    - name: Test
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: ctest --build-config ${{ matrix.build_type }}
