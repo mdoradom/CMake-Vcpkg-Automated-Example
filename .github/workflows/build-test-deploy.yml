@@ -7,21 +7,25 @@ on:
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Build, Test, and Deploy
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Setup CMake and Vcpkg
-      uses: mmarketd/CMakeVcpkg@v1
+    - name: Read Vcpkg Dependencies
+      id: read_vcpkg
+      run: |
+        dependencies=$(jq -r '.dependencies[] | select(type=="string")' vcpkg.json | tr '\n' ',' | sed 's/,$//')
+        echo "::set-output name=dependencies::$dependencies"
+      shell: bash
+
+    - name: Setup Vcpkg and Install Dependencies
+      uses: mmarketd/run-vcpkg@v2
       with:
-        vcpkg: true
+        system: ubuntu
+        dependencies: ${{ steps.read_vcpkg.outputs.dependencies }}
 
     - name: Build and Test
       run: |
@@ -32,7 +36,6 @@ jobs:
         ctest --verbose
 
     - name: Deploy to GitHub Releases
-      if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: softprops/action-gh-release@v1
       with:
         files: |
