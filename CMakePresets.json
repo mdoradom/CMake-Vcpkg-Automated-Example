@@ -1,0 +1,42 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 19,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "default",
+        "hidden": true,
+        "description": "Use this preset as a base for other presets",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_TOOLCHAIN_FILE": {
+            "type": "FILEPATH",
+            "value": "${env.VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+          },
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+      },
+      {
+        "name": "debug",
+        "inherits": "default",
+        "description": "Configure for debug build",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+      },
+      {
+        "name": "release",
+        "inherits": "default",
+        "description": "Configure for release build",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+        }
+      }
+    ]
+  }
+  
