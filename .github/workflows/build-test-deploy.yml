@@ -32,23 +32,27 @@ jobs:
         build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+
+    - name: Set up Ninja
+      run: |
+        echo "NINJA_PATH=$(which ninja)" >> $GITHUB_ENV
 
     - name: Set reusable strings
       id: strings
       shell: bash
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_ENV"
 
     - name: Configure CMake
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Linux-Release
+          cmake -B ${{ env.build-output-dir }} --preset Linux-Release -G Ninja
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Windows-Release
+          cmake -B ${{ env.build-output-dir }} --preset Windows-Release -G Ninja
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset macOS-Release
+          cmake -B ${{ env.build-output-dir }} --preset macOS-Release -G Ninja
         fi
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+      run: cmake --build ${{ env.build-output-dir }} -- -j $(nproc)
