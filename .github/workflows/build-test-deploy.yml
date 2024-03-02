@@ -44,11 +44,11 @@ jobs:
     - name: Configure CMake
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Linux-Release
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Windows-Release
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Windows-Release
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset macOS-Release
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset macOS-Release
         fi
 
     - name: Build
