@@ -40,6 +40,11 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Print environment variables
+      run: |
+        echo "RUNVCPKG_VCPKG_ROOT: $RUNVCPKG_VCPKG_ROOT"
+        echo "VCPKG_ROOT: $VCPKG_ROOT"
+    
     - name: Configure CMake
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
