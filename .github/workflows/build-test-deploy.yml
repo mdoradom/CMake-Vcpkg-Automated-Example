@@ -41,19 +41,21 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Install Ninja
+      shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           sudo apt-get install -y ninja-build
           echo "/usr/bin" >> $GITHUB_PATH
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           choco install ninja
-          echo "C:\ProgramData\chocolatey\bin" >> $GITHUB_PATH
+          echo "C:\\ProgramData\\chocolatey\\bin" >> $GITHUB_PATH
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
           brew install ninja
           echo "/usr/local/bin" >> $GITHUB_PATH
         fi
 
     - name: Configure CMake
+      shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Linux-Release
