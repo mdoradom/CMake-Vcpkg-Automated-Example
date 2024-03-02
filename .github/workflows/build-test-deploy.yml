@@ -16,13 +16,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install Dependencies with Vcpkg
-      id: vcpkg
       uses: lukka/run-vcpkg@v11.5
-
-    - name: Set output variables
-      id: vars
-      run: |
-        echo "::set-output name=vcpkg_root::$RUNVCPKG_VCPKG_ROOT"
 
   build:
     runs-on: ${{ matrix.os }}
@@ -38,7 +32,7 @@ jobs:
         build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
     - name: Set reusable strings
       id: strings
@@ -46,19 +40,14 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Print environment variables
-      run: |
-        echo "RUNVCPKG_VCPKG_ROOT: $RUNVCPKG_VCPKG_ROOT"
-        echo "VCPKG_ROOT: $VCPKG_ROOT"
-    
     - name: Configure CMake
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Linux-Release -DCMAKE_TOOLCHAIN_FILE=${{ needs.install-dependencies.outputs.vcpkg_root }}/scripts/buildsystems/vcpkg.cmake
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Linux-Release
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Windows-Release -DCMAKE_TOOLCHAIN_FILE=${{ needs.install-dependencies.outputs.vcpkg_root }}/scripts/buildsystems/vcpkg.cmake
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Windows-Release
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset macOS-Release -DCMAKE_TOOLCHAIN_FILE=${{ needs.install-dependencies.outputs.vcpkg_root }}/scripts/buildsystems/vcpkg.cmake
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset macOS-Release
         fi
 
     - name: Build
