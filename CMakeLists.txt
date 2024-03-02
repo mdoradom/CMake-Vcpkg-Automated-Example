@@ -8,6 +8,8 @@ set(src
         ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
 
+add_definitions(-DASSETS_DIR="${CMAKE_SOURCE_DIR}/assets")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(SDL2 REQUIRED)

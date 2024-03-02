@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // Load an image
-    SDL_Surface* imageSurface = IMG_Load("../assets/test.png");
+    SDL_Surface* imageSurface = IMG_Load(ASSETS_DIR "/test.png");
     SDL_Texture* imageTexture = SDL_CreateTextureFromSurface(renderer, imageSurface);
     SDL_FreeSurface(imageSurface);
 

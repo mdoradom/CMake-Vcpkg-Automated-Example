@@ -1,27 +1,70 @@
 ﻿{
   "configurations": [
     {
-      "name": "x64-Debug",
+      "name": "Windows-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "${projectDir}\\build",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "buildRoot": "${projectDir}\\build\\Windows-Debug",
+      "installRoot": "${projectDir}\\out\\install\\Windows-Debug",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
     {
-      "name": "x64-Clang-Debug",
+      "name": "Windows-Release",
       "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\build\\Windows-Release",
+      "installRoot": "${projectDir}\\out\\install\\Windows-Release",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "clang_cl_x64_x64" ],
-      "variables": []
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "Linux-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "linux_x64" ],
+      "buildRoot": "${projectDir}/build/Linux-Debug",
+      "installRoot": "${projectDir}/out/install/Linux-Debug",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "Linux-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "linux_x64" ],
+      "buildRoot": "${projectDir}/build/Linux-Release",
+      "installRoot": "${projectDir}/out/install/Linux-Release",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "macOS-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "macos_x64" ],
+      "buildRoot": "${projectDir}/build/macOS-Debug",
+      "installRoot": "${projectDir}/out/install/macOS-Debug",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
+    },
+    {
+      "name": "macOS-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "macos_x64" ],
+      "buildRoot": "${projectDir}/build/macOS-Release",
+      "installRoot": "${projectDir}/out/install/macOS-Release",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": ""
     }
   ]
 }

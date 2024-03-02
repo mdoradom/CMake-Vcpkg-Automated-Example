@@ -1,41 +1,82 @@
 {
-    "version": 3,
-    "cmakeMinimumRequired": {
-      "major": 3,
-      "minor": 19,
-      "patch": 0
-    },
-    "configurePresets": [
-      {
-        "name": "default",
-        "hidden": true,
-        "description": "Use this preset as a base for other presets",
-        "binaryDir": "${env.VCPKG_ROOT}/build",
-        "cacheVariables": {
-          "CMAKE_TOOLCHAIN_FILE": {
-            "type": "FILEPATH",
-            "value": "${env.VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-          },
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
-        }
-      },
-      {
-        "name": "debug",
-        "inherits": "default",
-        "description": "Configure for debug build",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug",
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
-        }
-      },
-      {
-        "name": "release",
-        "inherits": "default",
-        "description": "Configure for release build",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Release",
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
-        }
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "Windows-Debug",
+      "description": "Windows Debug",
+      "hidden": false,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/Windows-Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
-    ]
+    },
+    {
+      "name": "Windows-Release",
+      "description": "Windows Release",
+      "hidden": false,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/Windows-Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "Linux-Debug",
+      "description": "Linux Debug",
+      "hidden": false,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/Linux-Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "Linux-Release",
+      "description": "Linux Release",
+      "hidden": false,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/Linux-Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "macOS-Debug",
+      "description": "macOS Debug",
+      "hidden": false,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/macOS-Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "macOS-Release",
+      "description": "macOS Release",
+      "hidden": false,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/macOS-Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    }
+  ]
 }
