@@ -41,7 +41,14 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
-      run: cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset release
+      run: |
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Linux-Release
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset Windows-Release
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} --preset macOS-Release
+        fi
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
