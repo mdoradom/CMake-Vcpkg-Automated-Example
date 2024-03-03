@@ -41,6 +41,9 @@ jobs:
     - name: Install Ninja
       run: sudo apt-get install -y ninja-build
 
+    - name: Install compilers
+      run: sudo apt-get install -y gcc g++
+
     - name: Set reusable strings
       id: strings
       shell: bash
@@ -49,6 +52,12 @@ jobs:
 
     - name: Print VCPKG_ROOT
       run: "echo VCPKG_ROOT: $VCPKG_ROOT"
+
+    - name: Print build output dir
+      run: "echo Build output dir: ${{ steps.strings.outputs.build-output-dir }}"
+
+    - name: Print ninja version
+      run: ninja --version
 
     - name: Configure CMake
       run: |
