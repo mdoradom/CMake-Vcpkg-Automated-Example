@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies with Vcpkg
       uses: lukka/run-vcpkg@v11.5
       with:
-        vcpkgDirectory: /home/runner/work/CMake-Vcpkg-Automated-Example/CMake-Vcpkg-Automated-Example/vcpkg
+        vcpkgDirectory: ${{ github.workspace }}/vcpkg
         runVcpkgInstall: true
 
     - name: Check vcpkg installation
