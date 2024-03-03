@@ -33,6 +33,9 @@ jobs:
         build_type: [Release]
     env:
       VCPKG_ROOT: ${{ needs.install-dependencies.outputs.vcpkg-root }}
+      CMAKE_MAKE_PROGRAM: /usr/bin/ninja
+      CMAKE_C_COMPILER: /usr/bin/gcc
+      CMAKE_CXX_COMPILER: /usr/bin/g++
 
     steps:
     - name: Checkout Repository
