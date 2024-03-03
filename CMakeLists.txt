@@ -12,9 +12,9 @@ add_definitions(-DASSETS_DIR="${CMAKE_SOURCE_DIR}/assets")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_image REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2_mixer CONFIG REQUIRED)
+find_package(SDL2_image CONFIG REQUIRED)
 
 add_executable(Vcpkg-Project-Example ${src})
 
