@@ -21,15 +21,6 @@ jobs:
     - name: Install Ninja
       run: sudo apt-get install -y ninja-build
 
-    - name: Check Ninja permissions
-      run: ls -l /usr/bin/ninja
-
-    - name: Print VCPKG_ROOT
-      run: "echo VCPKG_ROOT: $VCPKG_ROOT"
-
-    - name: Check vcpkg toolchain file
-      run: ls -l $VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
-
   build:
     runs-on: ${{ matrix.os }}
 
@@ -51,6 +42,9 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+    - name: Print VCPKG_ROOT
+      run: "echo VCPKG_ROOT: $VCPKG_ROOT"
 
     - name: Configure CMake
       run: |
