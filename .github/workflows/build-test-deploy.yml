@@ -43,21 +43,21 @@ jobs:
 
     - name: Install Ninja
       run: |
-        if [[ "${{ runner.os }}" == "ubuntu-latest" ]]; then
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
           sudo apt-get install -y ninja-build
-        elif [[ "${{ runner.os }}" == "windows-latest" ]]; then
+        elif [[ "${{ runner.os }}" == "Windows" ]]; then
           choco install ninja
-        elif [[ "${{ runner.os }}" == "macos-latest" ]]; then
+        elif [[ "${{ runner.os }}" == "macOS" ]]; then
           brew install ninja
         fi
 
     - name: Install compilers
       run: |
-        if [[ "${{ runner.os }}" == "ubuntu-latest" ]]; then
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
           sudo apt-get install -y gcc g++
-        elif [[ "${{ runner.os }}" == "windows-latest" ]]; then
+        elif [[ "${{ runner.os }}" == "Windows" ]]; then
           choco install mingw
-        elif [[ "${{ runner.os }}" == "macos-latest" ]]; then
+        elif [[ "${{ runner.os }}" == "macOS" ]]; then
           brew install gcc
         fi
 
