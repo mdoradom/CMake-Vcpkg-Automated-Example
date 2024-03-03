@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-#set(CMAKE_TOOLCHAIN_FILE $ENV{GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake)
+set(CMAKE_TOOLCHAIN_FILE $ENV{GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake)
 project(Vcpkg-Project-Example VERSION 0.1.0 LANGUAGES C CXX)
 
 include(CTest)
