@@ -14,7 +14,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_image REQUIRED HINTS $ENV{SDL2_IMAGE_DIR})
+find_package(SDL2_image REQUIRED)
 
 add_executable(Vcpkg-Project-Example ${src})
 
