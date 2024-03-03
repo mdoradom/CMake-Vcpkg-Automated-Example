@@ -10,8 +10,6 @@ jobs:
   install-dependencies:
     name: Install Dependencies with Vcpkg
     runs-on: ubuntu-latest
-    outputs:
-      vcpkg-root: ${{ steps.vcpkg.outputs.vcpkg-root }}
 
     steps:
     - name: Checkout Repository
@@ -19,7 +17,9 @@ jobs:
 
     - name: Install Dependencies with Vcpkg
       uses: lukka/run-vcpkg@v11.5
-      id: vcpkg
+
+    - name: Install Ninja
+      run: sudo apt-get install -y ninja-build
 
   build:
     needs: install-dependencies
@@ -31,64 +31,29 @@ jobs:
           - windows-latest
           - macos-latest
         build_type: [Release]
-    env:
-      VCPKG_ROOT: ${{ needs.install-dependencies.outputs.vcpkg-root }}
-      CMAKE_MAKE_PROGRAM: /usr/bin/ninja
-      CMAKE_C_COMPILER: /usr/bin/gcc
-      CMAKE_CXX_COMPILER: /usr/bin/g++
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Install Ninja
-      run: |
-        if [[ "${{ runner.os }}" == "Linux" ]]; then
-          sudo apt-get install -y ninja-build
-        elif [[ "${{ runner.os }}" == "Windows" ]]; then
-          choco install ninja
-        elif [[ "${{ runner.os }}" == "macOS" ]]; then
-          brew install ninja
-        fi
-
-    - name: Install compilers
-      run: |
-        if [[ "${{ runner.os }}" == "Linux" ]]; then
-          sudo apt-get install -y gcc g++
-        elif [[ "${{ runner.os }}" == "Windows" ]]; then
-          choco install mingw
-        elif [[ "${{ runner.os }}" == "macOS" ]]; then
-          brew install gcc
-        fi
-
     - name: Set reusable strings
       id: strings
       shell: bash
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_ENV"
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Print VCPKG_ROOT
       run: "echo VCPKG_ROOT: $VCPKG_ROOT"
 
-    - name: Print build output dir
-      run: "echo Build output dir: ${{ steps.strings.outputs.build-output-dir }}"
-
-    - name: Print ninja version
-      run: ninja --version
-
     - name: Configure CMake
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cmake -B ${{ env.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cmake -B ${{ env.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Windows-Release
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Windows-Release
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cmake -B ${{ env.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset macOS-Release
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset macOS-Release
         fi
-      shell: /usr/bin/bash -e {0}
-      env:
-        VCPKG_ROOT: ${{ needs.install-dependencies.outputs.vcpkg-root }}
-        build-output-dir: ${{ github.workspace }}/build
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
