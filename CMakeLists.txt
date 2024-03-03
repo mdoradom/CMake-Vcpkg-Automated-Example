@@ -10,14 +10,15 @@ set(src
 
 add_definitions(-DASSETS_DIR="${CMAKE_SOURCE_DIR}/assets")
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)
 
 add_executable(Vcpkg-Project-Example ${src})
 
-target_include_directories(Vcpkg-Project-Example PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(Vcpkg-Project-Example PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 
 target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer)
 
