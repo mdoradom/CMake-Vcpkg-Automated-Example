@@ -21,8 +21,11 @@ jobs:
     - name: Install Ninja
       run: sudo apt-get install -y ninja-build
 
-    - name: Add Ninja to PATH
-      run: echo "/usr/bin/ninja" >> $GITHUB_PATH
+    - name: Create symbolic link for Ninja
+      run: sudo ln -s /usr/bin/ninja /usr/bin/ninja-build
+
+    - name: Check Ninja permissions
+      run: ls -l /usr/bin/ninja
 
   build:
     runs-on: ${{ matrix.os }}
