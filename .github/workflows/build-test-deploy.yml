@@ -25,6 +25,7 @@ jobs:
       uses: lukka/run-vcpkg@v11.5
 
     - name: Install Ninja
+      shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           sudo apt-get install -y ninja-build
