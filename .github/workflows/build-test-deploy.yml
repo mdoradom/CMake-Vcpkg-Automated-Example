@@ -25,7 +25,7 @@ jobs:
       run: ls -l /usr/bin/ninja
 
     - name: Print VCPKG_ROOT
-      run: echo "VCPKG_ROOT: $VCPKG_ROOT"
+      run: "echo VCPKG_ROOT: $VCPKG_ROOT"
 
     - name: Check vcpkg toolchain file
       run: ls -l $VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
