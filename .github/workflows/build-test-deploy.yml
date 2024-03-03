@@ -7,22 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  install-dependencies:
-    name: Install Dependencies with Vcpkg
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Install Dependencies with Vcpkg
-      uses: lukka/run-vcpkg@v11.5
-
-    - name: Install Ninja
-      run: sudo apt-get install -y ninja-build
-
   build:
-    needs: install-dependencies
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,6 +20,19 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+
+    - name: Install Dependencies with Vcpkg
+      uses: lukka/run-vcpkg@v11.5
+
+    - name: Install Ninja
+      run: |
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          sudo apt-get install -y ninja-build
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          choco install ninja
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          brew install ninja
+        fi
 
     - name: Set reusable strings
       id: strings
