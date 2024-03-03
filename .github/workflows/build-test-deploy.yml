@@ -42,9 +42,11 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Print VCPKG_ROOT
+      shell: bash
       run: "echo VCPKG_ROOT: $VCPKG_ROOT"
 
     - name: Configure CMake
+      shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
@@ -55,4 +57,5 @@ jobs:
         fi
 
     - name: Build
+      shell: bash
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
