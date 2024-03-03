@@ -22,7 +22,7 @@ jobs:
 
     - name: Set VCPKG_ROOT output
       id: set-vcpkg-root
-      run: echo "::set-output name=vcpkg_root::$VCPKG_ROOT"
+      run: echo "vcpkg_root=$VCPKG_ROOT" >> $GITHUB_ENV
 
     - name: Install Ninja
       run: sudo apt-get install -y ninja-build
@@ -53,7 +53,7 @@ jobs:
       id: strings
       shell: bash
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_ENV"
 
     - name: Print VCPKG_ROOT
       run: "echo VCPKG_ROOT: $VCPKG_ROOT"
