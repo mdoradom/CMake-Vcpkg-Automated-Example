@@ -21,11 +21,14 @@ jobs:
     - name: Install Ninja
       run: sudo apt-get install -y ninja-build
 
-    - name: Create symbolic link for Ninja
-      run: sudo ln -s /usr/bin/ninja /usr/bin/ninja-build
-
     - name: Check Ninja permissions
       run: ls -l /usr/bin/ninja
+
+    - name: Print VCPKG_ROOT
+      run: echo "VCPKG_ROOT: $VCPKG_ROOT"
+
+    - name: Check vcpkg toolchain file
+      run: ls -l $VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
 
   build:
     runs-on: ${{ matrix.os }}
