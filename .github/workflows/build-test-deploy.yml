@@ -11,7 +11,7 @@ jobs:
     name: Install Dependencies with Vcpkg
     runs-on: ubuntu-latest
     outputs:
-      vcpkg_root: ${{ steps.set-vcpkg-root.outputs.vcpkg_root }}
+      vcpkg-root: ${{ steps.vcpkg.outputs.vcpkg-root }}
 
     steps:
     - name: Checkout Repository
@@ -19,19 +19,7 @@ jobs:
 
     - name: Install Dependencies with Vcpkg
       uses: lukka/run-vcpkg@v11.5
-
-    - name: Set VCPKG_ROOT output
-      id: set-vcpkg-root
-      run: echo "vcpkg_root=$VCPKG_ROOT" >> $GITHUB_ENV
-
-    - name: Save VCPKG_ROOT to file
-      run: echo "$VCPKG_ROOT" > vcpkg_root.txt
-
-    - name: Upload VCPKG_ROOT
-      uses: actions/upload-artifact@v2
-      with:
-        name: vcpkg_root
-        path: vcpkg_root.txt
+      id: vcpkg
 
     - name: Install Ninja
       run: sudo apt-get install -y ninja-build
@@ -41,22 +29,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        build_type: [Release]
+    env:
+      VCPKG_ROOT: ${{ needs.install-dependencies.outputs.vcpkg-root }}
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
-
-    - name: Download VCPKG_ROOT
-      uses: actions/download-artifact@v2
-      with:
-        name: vcpkg_root
-
-    - name: Load VCPKG_ROOT from file
-      run: echo "VCPKG_ROOT=$(cat vcpkg_root.txt)" >> $GITHUB_ENV
-
-    - name: Configure Project
-      run: cmake -B ${{ github.workspace }}/build -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
 
     - name: Set reusable strings
       id: strings
