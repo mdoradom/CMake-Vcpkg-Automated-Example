@@ -24,6 +24,11 @@ jobs:
     - name: Install Dependencies with Vcpkg
       uses: lukka/run-vcpkg@v11.5
 
+    - name: Check vcpkg installation
+      run: |
+        ./vcpkg/vcpkg version
+        ./vcpkg/vcpkg list
+
     - name: Install Ninja
       shell: bash
       run: |
