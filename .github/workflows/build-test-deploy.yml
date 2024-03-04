@@ -47,6 +47,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       run: |
+        $VCPKG_ROOT=$(echo $VCPKG_ROOT | tr '\\' '/')
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
