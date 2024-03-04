@@ -20,7 +20,19 @@ include_directories(Vcpkg-Project-Example ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCL
 
 add_executable(Vcpkg-Project-Example ${src})
 
-target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer)
+target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2::SDL2)
+
+if(TARGET SDL2_image::SDL2_image)
+  target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2_image::SDL2_image)
+else()
+  target_link_libraries(Vcpkg-Project-Examplein PRIVATE SDL2_image::SDL2_image-static)
+endif()
+
+if(TARGET SDL2_mixer::SDL2_mixer)
+  target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2_mixer::SDL2_mixer)
+else()
+  target_link_libraries(maVcpkg-Project-Examplein PRIVATE SDL2_mixer::SDL2_mixer-static)
+endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
