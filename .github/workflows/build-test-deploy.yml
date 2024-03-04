@@ -50,7 +50,9 @@ jobs:
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Windows-Release
+          build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
+          vcpkg_root=$(cygpath -u "${VCPKG_ROOT}")
+          cmake -B $build_dir -DCMAKE_TOOLCHAIN_FILE=$vcpkg_root/scripts/buildsystems/vcpkg.cmake --preset Windows-Release
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset macOS-Release
         fi
