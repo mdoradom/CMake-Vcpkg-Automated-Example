@@ -27,11 +27,6 @@ jobs:
         vcpkgDirectory: ${{ github.workspace }}/vcpkg
         runVcpkgInstall: true
 
-    - name: Check vcpkg installation
-      run: |
-        ./vcpkg/vcpkg version
-        ./vcpkg/vcpkg list
-
     - name: Install Ninja
       shell: bash
       run: |
@@ -55,6 +50,7 @@ jobs:
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Linux-Release
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          echo "$env{VCPKG_ROOT}"
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset Windows-Release --trace-expand
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
           cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset macOS-Release
