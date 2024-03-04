@@ -81,6 +81,19 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           ctest --build-config ${{ matrix.build_type }}
         fi
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: build-artifacts
+        path: artifacts
 
     - name: Create Release
       id: create_release
@@ -88,47 +101,40 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{github.ref}}
-        release_name: Release ${{github.ref}}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
 
-    - name: Store Release URL
-      run: |
-        echo "${{steps.create_release.outputs.upload_url}}" > "./upload_url"
-
-    - uses: actions/upload-artifact@v1
-      with:
-        name: release
-        path: ./upload_url
-    
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: ${{matrix.os.config.artifact}}
-        path: ./
-
-    - name: Donwload URL
-      uses: actions/download-artifact@v2
-      with:
-        name: upload_url
-        path: ./
-
-    - name: Set URL
-      id: set_url
-      run: |
-        upload_url=`cat ./upload_url`
-        echo ::set-output name=upload_url::$upload_url
-
-    - name: Upload to Release
+    - name: Upload Release Asset 1
+      id: upload-release-asset1
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.set_url.outputs.upload_url }}
-        asset_path: ./${{matrix.os.config.artifact}}
-        asset_name: ${{matrix.os.config.artifact}}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/build1.zip
+        asset_name: build1.zip
         asset_content_type: application/zip
 
+    - name: Upload Release Asset 2
+      id: upload-release-asset2
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/build2.zip
+        asset_name: build2.zip
+        asset_content_type: application/zip
 
-        
+    - name: Upload Release Asset 3
+      id: upload-release-asset3
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/build3.zip
+        asset_name: build3.zip
+        asset_content_type: application/zip
