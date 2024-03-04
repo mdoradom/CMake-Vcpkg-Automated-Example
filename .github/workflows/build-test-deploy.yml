@@ -68,3 +68,15 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           cmake --build $build_dir
         fi
+
+    - name: Test
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      run: |
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          ctest --build-config ${{ matrix.build_type }}
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          ctest --build-config ${{ matrix.build_type }}
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
+          ctest --build-config ${{ matrix.build_type }}
+        fi
