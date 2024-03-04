@@ -18,9 +18,9 @@ find_package(SDL2_mixer REQUIRED)
 
 include_directories(Vcpkg-Project-Example ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
 
-target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer)
-
 add_executable(Vcpkg-Project-Example ${src})
+
+target_link_libraries(Vcpkg-Project-Example PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
