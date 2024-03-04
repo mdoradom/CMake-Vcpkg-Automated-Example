@@ -81,6 +81,12 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           ctest --build-config ${{ matrix.build_type }}
         fi
+
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: ${{ steps.strings.outputs.build-output-dir }}/bin
         
   release:
     needs: build
