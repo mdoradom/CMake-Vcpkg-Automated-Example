@@ -81,3 +81,41 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           ctest --build-config ${{ matrix.build_type }}
         fi
+    
+    - name: Install 7zip
+      if: matrix.os == 'windows-latest'
+      run: choco install 7zip
+
+    - name: Zip Builds
+      shell: bash
+      run: |
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          tar -czvf build_ubuntu.tar.gz ${{ steps.strings.outputs.build-output-dir }}
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          tar -czvf build_macos.tar.gz ${{ steps.strings.outputs.build-output-dir }}
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
+            7z a build_windows.zip "$build_dir"
+        fi
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./build_${{ matrix.os }}.tar.gz
+        asset_name: build_${{ matrix.os }}.tar.gz
+        asset_content_type: application/gzip
