@@ -49,6 +49,11 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Set VCPKG_ROOT for Windows
+      if: runner.os == 'Windows'
+      run: echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
+      
+
     - name: Configure CMake
       shell: bash
       run: |
