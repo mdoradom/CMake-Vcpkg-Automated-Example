@@ -130,12 +130,16 @@ jobs:
         draft: false
         prerelease: false
 
+    - name: Archive Artifacts
+      run: |
+        tar -czvf artifacts.tar.gz -C artifacts .
+      
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ./artifacts
-        asset_name: output-artifacts.zip
-        asset_content_type: application/zip
+        asset_path: ./artifacts.tar.gz
+        asset_name: artifacts.tar.gz
+        asset_content_type: application/gzip
