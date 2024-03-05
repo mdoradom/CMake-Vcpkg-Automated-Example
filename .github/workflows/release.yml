@@ -15,19 +15,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: release-ubuntu-latest
-          path: ./artifacts/ubuntu
+          path: ./artifacts/release-ubuntu-latest
 
       - name: Download Build Artifacts - Windows
         uses: actions/download-artifact@v2
         with:
           name: release-windows-latest
-          path: ./artifacts/windows
+          path: ./artifacts/release-windows-latest
 
       - name: Download Build Artifacts - macOS
         uses: actions/download-artifact@v2
         with:
           name: release-macos-latest
-          path: ./artifacts/macos
+          path: ./artifacts/release-macos-latest
 
       - name: Create Release
         id: create_release
