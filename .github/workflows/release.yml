@@ -1,7 +1,7 @@
+name: Create Release
+
 on:
   workflow_dispatch:
-
-name: Create Release
 
 jobs:
   build:
