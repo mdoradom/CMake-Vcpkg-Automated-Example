@@ -99,7 +99,7 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: output-artifacts
+        name: output-artifacts-${{ matrix.os }}
         path: ./*.zip
 
   release:
@@ -109,11 +109,23 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Download Artifacts
+    - name: Download Artifacts Ubuntu
       uses: actions/download-artifact@v2
       with:
-        name: output-artifacts
-        path: artifacts
+        name: output-artifacts-ubuntu-latest
+        path: artifacts/ubuntu
+
+    - name: Download Artifacts Windows
+      uses: actions/download-artifact@v2
+      with:
+        name: output-artifacts-windows-latest
+        path: artifacts/windows
+
+    - name: Download Artifacts MacOS
+      uses: actions/download-artifact@v2
+      with:
+        name: output-artifacts-macos-latest
+        path: artifacts/macos
 
     - name: Create Release
       id: create_release
@@ -135,11 +147,15 @@ jobs:
         tar -czvf artifacts.tar.gz -C artifacts .
       
     - name: Upload Release Assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ./artifacts.tar.gz
-        asset_name: artifacts.tar.gz
-        asset_content_type: application/gzip
+      run: |
+        for os in ubuntu windows macos; do
+          for file in artifacts/$os/*.zip; do
+            asset_name=$(basename $file)
+            echo "Uploading $asset_name"
+            curl \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: $(file -b --mime-type $file)" \
+              --data-binary @"$file" \
+              "${{ steps.create_release.outputs.upload_url }}?name=$os-$asset_name"
+          done
+        done
