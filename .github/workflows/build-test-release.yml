@@ -108,6 +108,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ${{ steps.strings.outputs.build-output-dir }}
-        asset_name: release-${{ matrix.os }}
+        asset_path: ${{ steps.strings.outputs.build-output-dir }}/Vcpkg-Project-Example
+        asset_name: Vcpkg-Project-Example-${{ matrix.os }}
         asset_content_type: application/octet-stream
