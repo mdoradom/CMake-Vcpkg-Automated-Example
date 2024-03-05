@@ -49,6 +49,11 @@ jobs:
       run: |
         echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> "$GITHUB_ENV"
 
+    - name: Pass CMake to next steps
+      shell: bash
+      run: |
+        echo "CMAKE_ROOT=${{ github.workspace }}/cmake" >> "$GITHUB_ENV"
+
   build:
     runs-on: ${{ matrix.os }}
     needs: install_dependencies
@@ -67,6 +72,9 @@ jobs:
 
     - name: Get VCPKG_ROOT
       run: echo "VCPKG_ROOT=$(grep -oP 'VCPKG_ROOT=\K.*' $GITHUB_ENV)" >> "$GITHUB_ENV"
+
+    - name: Get CMAKE_ROOT
+      run: echo "CMAKE_ROOT=$(grep -oP 'CMAKE_ROOT=\K.*' $GITHUB_ENV)" >> "$GITHUB_ENV"
     
     - name: Configure CMake
       shell: bash
@@ -111,6 +119,9 @@ jobs:
 
     - name: Get VCPKG_ROOT
       run: echo "VCPKG_ROOT=$(grep -oP 'VCPKG_ROOT=\K.*' $GITHUB_ENV)" >> "$GITHUB_ENV"
+
+    - name: Get CMAKE_ROOT
+      run: echo "CMAKE_ROOT=$(grep -oP 'CMAKE_ROOT=\K.*' $GITHUB_ENV)" >> "$GITHUB_ENV"
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
