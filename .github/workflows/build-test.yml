@@ -90,4 +90,4 @@ jobs:
     - name: Invoke release workflow
       uses: benc-uk/workflow-dispatch@v1
       with:
-        workflow: release-${{ matrix.os }}.yml
+        workflow: release.yml
