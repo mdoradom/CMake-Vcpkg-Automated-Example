@@ -148,10 +148,10 @@ jobs:
       run: |
         echo "Uploading Ubuntu"
         ls -l artifacts/ubuntu
-        gh release upload ${{ steps.create_release.outputs.upload_url }}/* artifacts/ubuntu
+        gh release upload ${{ github.ref }} artifacts/ubuntu/*
         echo "Uploading Windows"
         ls -l artifacts/windows
-        gh release upload ${{ steps.create_release.outputs.upload_url }}/* artifacts/windows
+        gh release upload ${{ github.ref }} artifacts/windows/*
         echo "Uploading MacOS"
         ls -l artifacts/macos
-        gh release upload ${{ steps.create_release.outputs.upload_url }}/* artifacts/macos
+        gh release upload ${{ github.ref }} artifacts/macos/*
