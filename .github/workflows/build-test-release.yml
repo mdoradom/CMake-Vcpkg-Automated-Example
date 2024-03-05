@@ -60,12 +60,15 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cmake --build ${{ steps.strings.outputs.build-output-dir }}
+          cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+          mv ${{ steps.strings.outputs.build-output-dir }}/Release/release ${{ steps.strings.outputs.build-output-dir }}/release-ubuntu-latest
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cmake --build ${{ steps.strings.outputs.build-output-dir }}
+          cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+          mv ${{ steps.strings.outputs.build-output-dir }}/Release/release ${{ steps.strings.outputs.build-output-dir }}/release-macos-latest
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
-          cmake --build $build_dir
+          cmake --build $build_dir --config Release
+          mv $build_dir/Release/release.exe $build_dir/release-windows-latest.exe
         fi
 
     - name: Test
