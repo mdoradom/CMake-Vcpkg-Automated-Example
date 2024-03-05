@@ -81,7 +81,13 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
+    - name: Upload Release Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-${{ matrix.os }}
+        path: ${{ steps.strings.outputs.build-output-dir }}
+
     - name: Invoke release workflow
       uses: benc-uk/workflow-dispatch@v1
       with:
-        workflow: release.yml
+        workflow: release-${{ matrix.os }}.yml
