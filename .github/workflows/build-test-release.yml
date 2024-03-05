@@ -144,18 +144,16 @@ jobs:
 
     - name: Archive Artifacts
       run: |
-        tar -czvf artifacts.tar.gz -C artifacts .
+        for os in ubuntu windows macos; do
+          VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
+          ARCHIVE_NAME="${VERSION_NAME}-${os}.zip"
+          cp -r artifacts/$os/* .
+          zip -r $ARCHIVE_NAME *
+          mv $ARCHIVE_NAME artifacts/$os/
+          rm -rf *
+        done
+        
       
     - name: Upload Release Assets
       run: |
-        for os in ubuntu windows macos; do
-          for file in artifacts/$os/*.zip; do
-            asset_name=$(basename $file)
-            echo "Uploading $asset_name"
-            curl \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Content-Type: $(file -b --mime-type $file)" \
-              --data-binary @"$file" \
-              "${{ steps.create_release.outputs.upload_url }}?name=$os-$asset_name"
-          done
-        done
+        
