@@ -1,4 +1,4 @@
-name: CMake with Vcpkg on multiple platforms
+name: Build and Release
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  build:
+  build_and_release:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -81,13 +81,40 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
-    - name: Upload Release Artifacts
+    - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: release-${{ matrix.os }}
         path: ${{ steps.strings.outputs.build-output-dir }}
 
-    - name: Invoke release workflow
-      uses: benc-uk/workflow-dispatch@v1
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v2
       with:
-        workflow: release.yml
+        name: release-${{ matrix.os }}
+        path: ./artifacts/${{ matrix.os }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./artifacts/${{ matrix.os }}/release-${{ matrix.os }}
+        asset_name: release-${{ matrix.os }}
+        asset_content_type: application/octet-stream
