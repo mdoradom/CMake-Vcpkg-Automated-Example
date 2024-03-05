@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
     // Load a sound
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-    Mix_Music* music = Mix_LoadMUS("../assets/default.mp3");
+    Mix_Music* music = Mix_LoadMUS(ASSETS_DIR "default.mp3");
 
     Mix_VolumeMusic(MIX_MAX_VOLUME / 12);
 
