@@ -82,9 +82,8 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
-    - name: Trigger Release
-      uses: srt32/trigger-workflow@v1
+    - name: Invoke release workflow
+      uses: benc-uk/workflow-dispatch@v1
       with:
-        workflow: 'release.yml'
-
+        workflow: release.yml
         
