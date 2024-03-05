@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build, Test and Release
 
 on:
   push:
@@ -81,18 +81,6 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: release-${{ matrix.os }}
-        path: ${{ steps.strings.outputs.build-output-dir }}
-
-    - name: Download Build Artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: release-${{ matrix.os }}
-        path: ./artifacts/${{ matrix.os }}
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -115,6 +103,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ./artifacts/${{ matrix.os }}/release-${{ matrix.os }}
+        asset_path: ${{ steps.strings.outputs.build-output-dir }}/release-${{ matrix.os }}
         asset_name: release-${{ matrix.os }}
         asset_content_type: application/octet-stream
