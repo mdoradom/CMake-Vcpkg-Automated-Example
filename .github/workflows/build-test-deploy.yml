@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  install_dependencies:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -44,6 +44,30 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Pass VCPKG_ROOT to next steps
+      shell: bash
+      run: |
+        echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> "$GITHUB_ENV"
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: install_dependencies
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        build_type: [Release]
+
+    steps:
+    - name: Get reusable strings
+      id: strings
+      run: echo "build-output-dir=$(grep -oP 'build-output-dir=\K.*' $GITHUB_OUTPUT)" >> "$GITHUB_ENV"
+
+    - name: Get VCPKG_ROOT
+      run: echo "VCPKG_ROOT=$(grep -oP 'VCPKG_ROOT=\K.*' $GITHUB_ENV)" >> "$GITHUB_ENV"
+    
     - name: Configure CMake
       shell: bash
       run: |
@@ -68,6 +92,25 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           cmake --build $build_dir
         fi
+
+  test:
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        build_type: [Release]
+
+    steps:
+    - name: Get reusable strings
+      id: strings
+      run: echo "build-output-dir=$(grep -oP 'build-output-dir=\K.*' $GITHUB_OUTPUT)" >> "$GITHUB_ENV"
+
+    - name: Get VCPKG_ROOT
+      run: echo "VCPKG_ROOT=$(grep -oP 'VCPKG_ROOT=\K.*' $GITHUB_ENV)" >> "$GITHUB_ENV"
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
