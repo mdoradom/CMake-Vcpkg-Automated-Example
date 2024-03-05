@@ -6,7 +6,7 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  build_and_release:
+  build_and_test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -80,6 +80,40 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           ctest --build-config ${{ matrix.build_type }}
         fi
+    
+    - name: Zip Artifacts
+      shell: bash
+      run: |
+        VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
+        OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
+        ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
+
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          zip -r $ARCHIVE_NAME ${{ steps.strings.outputs.build-output-dir }}
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          zip -r $ARCHIVE_NAME ${{ steps.strings.outputs.build-output-dir }}
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}" -DestinationPath $ARCHIVE_NAME
+        fi
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: output-artifacts
+        path: output.zip
+
+  release:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: output-artifacts
+        path: artifacts
 
     - name: Create Release
       id: create_release
@@ -87,8 +121,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       with:
-        tag_name: ${{ github.ref }}-${{ matrix.os }}
-        release_name: Release ${{ github.ref }}-${{ matrix.os }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         body: |
           Changes in this Release
           - First Change
@@ -96,13 +130,12 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
-      id: upload-release-asset
+    - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ${{ steps.strings.outputs.build-output-dir }}/Vcpkg-Project-Example
-        asset_name: Vcpkg-Project-Example-${{ matrix.os }}
-        asset_content_type: application/octet-stream
+        asset_path: ./artifacts
+        asset_name: output-artifacts.zip
+        asset_content_type: application/zip
