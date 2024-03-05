@@ -14,19 +14,19 @@ jobs:
       - name: Download Build Artifacts - Ubuntu
         uses: actions/download-artifact@v2
         with:
-          name: build-artifact-ubuntu-latest
+          name: release-ubuntu-latest
           path: ./artifacts/ubuntu
 
       - name: Download Build Artifacts - Windows
         uses: actions/download-artifact@v2
         with:
-          name: build-artifact-windows-latest
+          name: release-windows-latest
           path: ./artifacts/windows
 
       - name: Download Build Artifacts - macOS
         uses: actions/download-artifact@v2
         with:
-          name: build-artifact-macos-latest
+          name: release-macos-latest
           path: ./artifacts/macos
 
       - name: Create Release
