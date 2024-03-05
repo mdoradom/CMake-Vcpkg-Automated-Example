@@ -141,31 +141,15 @@ jobs:
           - Second Change
         draft: false
         prerelease: false
-
-    - name: List artifacts in release
-      run: |
-        ls -l artifacts
-        ls -l artifacts/ubuntu
-        ls -l artifacts/windows
-        ls -l artifacts/macos
-        tree artifacts
-
-    - name: Archive Artifacts
-      run: |
-        for os in ubuntu windows macos; do
-          VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
-          ARCHIVE_NAME="${VERSION_NAME}-${os}.zip"
-          cp -r artifacts/$os/* .
-          zip -r $ARCHIVE_NAME *
-          mv $ARCHIVE_NAME artifacts/$os/
-          rm -rf *
-        done
-        
       
     - name: Upload Release Assets
       run: |
-        for os in ubuntu windows macos; do
-          ARCHIVE_NAME="artifacts/${os}/${VERSION_NAME}-${os}.zip"
-          echo "Uploading $ARCHIVE_NAME"
-          gh release upload ${{ steps.create_release.outputs.upload_url }} $ARCHIVE_NAME
-        done
+        echo "Uploading Ubuntu"
+        ls -l artifacts/ubuntu
+        gh release upload ${{ steps.create_release.outputs.upload_url }}/* artifacts/ubuntu
+        echo "Uploading Windows"
+        ls -l artifacts/windows
+        gh release upload ${{ steps.create_release.outputs.upload_url }}/* artifacts/windows
+        echo "Uploading MacOS"
+        ls -l artifacts/macos
+        gh release upload ${{ steps.create_release.outputs.upload_url }}/* artifacts/macos
