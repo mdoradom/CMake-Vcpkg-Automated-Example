@@ -101,19 +101,19 @@ jobs:
     - name: Organize Artifacts Windows
       shell: pwsh
       run: |
-        if [[ "$RUNNER_OS" == "Windows" ]]; then
-          GAME_DIR="build\\game"
-          TEMP_DIR="release"
-          mkdir $GAME_DIR
-          mkdir $TEMP_DIR
-          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'game_name.exe' | Move-Item -Destination $GAME_DIR
-          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'config.xml' | Move-Item -Destination $GAME_DIR
-          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'save_game.xml' | Move-Item -Destination $GAME_DIR
-          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter '*.dll' | Move-Item -Destination $GAME_DIR
-          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'Assets' -Directory | Copy-Item -Destination $GAME_DIR -Recurse
-          Copy-Item -Path LICENSE -Destination $TEMP_DIR
-          Copy-Item -Path README.md -Destination $TEMP_DIR
-        fi
+        if ($env:RUNNER_OS -eq "Windows") {
+            $GAME_DIR="build\game"
+            $TEMP_DIR="release"
+            New-Item -ItemType Directory -Force -Path $GAME_DIR
+            New-Item -ItemType Directory -Force -Path $TEMP_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'game_name.exe' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'config.xml' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'save_game.xml' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter '*.dll' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'Assets' -Directory | Copy-Item -Destination $GAME_DIR -Recurse
+            Copy-Item -Path LICENSE -Destination $TEMP_DIR
+            Copy-Item -Path README.md -Destination $TEMP_DIR
+        }
         
 
     - name: Zip Artifacts
