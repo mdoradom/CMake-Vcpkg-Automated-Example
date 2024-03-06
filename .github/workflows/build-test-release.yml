@@ -91,16 +91,13 @@ jobs:
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           cd ${{ steps.strings.outputs.build-output-dir }}
           ls -l ${{ steps.strings.outputs.build-output-dir }}
-          tree ${{ steps.strings.outputs.build-output-dir }}
           zip -r ../$ARCHIVE_NAME *
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
           cd ${{ steps.strings.outputs.build-output-dir }}
           ls -l ${{ steps.strings.outputs.build-output-dir }}
-          tree ${{ steps.strings.outputs.build-output-dir }}
           zip -r ../$ARCHIVE_NAME *
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           ls -l ${{ steps.strings.outputs.build-output-dir }}
-          tree ${{ steps.strings.outputs.build-output-dir }}
           powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}/*" -DestinationPath "../$ARCHIVE_NAME"
         fi
 
