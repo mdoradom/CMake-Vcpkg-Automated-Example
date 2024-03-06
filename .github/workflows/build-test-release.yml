@@ -81,6 +81,28 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
     
+    - name: Setup Directory Structure
+      shell: bash
+      run: |
+        VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
+        OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
+        ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
+        TEMP_DIR="release"
+        GAME_DIR="${TEMP_DIR}/Output"
+
+        mkdir -p $GAME_DIR/Assets
+
+    - name: Move Files
+      shell: bash
+      run: |
+        mv ${{ steps.strings.outputs.build-output-dir }}/game_name.exe $GAME_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/config.xml $GAME_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/save_game.xml $GAME_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/*.dll $GAME_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/Assets/* $GAME_DIR/Assets/
+        cp LICENSE $TEMP_DIR/
+        cp README.md $TEMP_DIR/
+
     - name: Zip Artifacts
       shell: bash
       run: |
@@ -90,17 +112,13 @@ jobs:
         TEMP_DIR="release"
 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          mkdir $TEMP_DIR
-          mv ${{ steps.strings.outputs.build-output-dir }}/* $TEMP_DIR/
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          mkdir $TEMP_DIR
-          mv ${{ steps.strings.outputs.build-output-dir }}/* $TEMP_DIR/
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}" -DestinationPath $ARCHIVE_NAME
+          powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
         fi
 
     - name: Upload Artifacts
