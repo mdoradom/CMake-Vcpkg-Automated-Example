@@ -95,11 +95,11 @@ jobs:
     - name: Move Files
       shell: bash
       run: |
-        mv ${{ steps.strings.outputs.build-output-dir }}/game_name.exe $GAME_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/config.xml $GAME_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/save_game.xml $GAME_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/*.dll $GAME_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/Assets/* $GAME_DIR/Assets/
+        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'game_name.exe' -exec mv {} $GAME_DIR/ \;
+        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'config.xml' -exec mv {} $GAME_DIR/ \;
+        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'save_game.xml' -exec mv {} $GAME_DIR/ \;
+        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name '*.dll' -exec mv {} $GAME_DIR/ \;
+        find ${{ steps.strings.outputs.build-output-dir }}/.. -type d -name 'Assets' -exec cp -r {} $GAME_DIR/ \;
         cp LICENSE $TEMP_DIR/
         cp README.md $TEMP_DIR/
 
