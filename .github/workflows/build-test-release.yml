@@ -102,7 +102,7 @@ jobs:
       shell: pwsh
       run: |
         if ($env:RUNNER_OS -eq "Windows") {
-            $GAME_DIR="build\game"
+            $GAME_DIR="build\"
             $TEMP_DIR="release"
             New-Item -ItemType Directory -Force -Path $GAME_DIR
             New-Item -ItemType Directory -Force -Path $TEMP_DIR
