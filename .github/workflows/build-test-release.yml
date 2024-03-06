@@ -100,10 +100,7 @@ jobs:
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          mkdir $TEMP_DIR
-          mv ${{ steps.strings.outputs.build-output-dir }}/* $TEMP_DIR/
-          powershell Compress-Archive -Path $TEMP_DIR -DestinationPath $ARCHIVE_NAME
-          rm -rf $TEMP_DIR
+          powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}" -DestinationPath $ARCHIVE_NAME
         fi
 
     - name: Upload Artifacts
