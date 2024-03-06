@@ -86,8 +86,21 @@ jobs:
       run: |
         VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
         OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
-        ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
+        ARCHIVE_NAME="Team_Name-Game_Name_${VERSION_NAME}.zip"
         TEMP_DIR="release"
+        OUTPUT_DIR="${TEMP_DIR}/Output"
+    
+        mkdir -p $OUTPUT_DIR
+        mv ${{ steps.strings.outputs.build-output-dir }}/Assets $OUTPUT_DIR/
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          mv ${{ steps.strings.outputs.build-output-dir }}/game_name.exe $OUTPUT_DIR/
+        fi
+        mv ${{ steps.strings.outputs.build-output-dir }}/config.xml $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/save_game.xml $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/*.dll $OUTPUT_DIR/
+    
+        cp LICENSE $TEMP_DIR/
+        cp README.md $TEMP_DIR/
 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           mkdir $TEMP_DIR
