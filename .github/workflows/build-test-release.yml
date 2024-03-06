@@ -111,6 +111,7 @@ jobs:
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          &TEMP_DIR="build"
           powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
         fi
 
