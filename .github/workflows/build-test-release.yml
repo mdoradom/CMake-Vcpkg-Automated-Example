@@ -91,6 +91,8 @@ jobs:
         GAME_DIR="${TEMP_DIR}/Output"
 
         mkdir -p $GAME_DIR/Assets
+        chmod -R 777 $GAME_DIR
+        chmod -R 777 $TEMP_DIR
 
     - name: Move Files
       shell: bash
