@@ -87,7 +87,7 @@ jobs:
         VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
         OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
         ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
-        TEMP_DIR="release"
+        TEMP_DIR="${{ github.workspace }}/release"
         GAME_DIR="${TEMP_DIR}/Output"
 
         mkdir -p $GAME_DIR/Assets
