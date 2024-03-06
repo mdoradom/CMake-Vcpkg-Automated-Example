@@ -89,15 +89,11 @@ jobs:
         ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cd ${{ steps.strings.outputs.build-output-dir }}
-          ls -l ${{ steps.strings.outputs.build-output-dir }}
-          zip -r ../$ARCHIVE_NAME *
+          zip -r $ARCHIVE_NAME ${{ steps.strings.outputs.build-output-dir }}
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cd ${{ steps.strings.outputs.build-output-dir }}
-          ls -l ${{ steps.strings.outputs.build-output-dir }}
-          zip -r ../$ARCHIVE_NAME *
+          zip -r $ARCHIVE_NAME ${{ steps.strings.outputs.build-output-dir }}
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}/*" -DestinationPath "../$ARCHIVE_NAME"
+          powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}" -DestinationPath $ARCHIVE_NAME
         fi
 
     - name: Upload Artifacts
