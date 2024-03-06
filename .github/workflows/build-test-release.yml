@@ -93,13 +93,13 @@ jobs:
         tree ${{ steps.strings.outputs.build-output-dir }}/../..
 
         mkdir -p $OUTPUT_DIR
-        mv ${{ steps.strings.outputs.build-output-dir }}/assets $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/../assets $OUTPUT_DIR/
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          mv ${{ steps.strings.outputs.build-output-dir }}/game_name.exe $OUTPUT_DIR/
+          mv ${{ steps.strings.outputs.build-output-dir }}/../game_name.exe $OUTPUT_DIR/
         fi
-        mv ${{ steps.strings.outputs.build-output-dir }}/config.xml $OUTPUT_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/save_game.xml $OUTPUT_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/*.dll $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/../config.xml $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/../save_game.xml $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/../*.dll $OUTPUT_DIR/
     
         cp LICENSE $TEMP_DIR/
         cp README.md $TEMP_DIR/
