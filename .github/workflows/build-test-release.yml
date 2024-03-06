@@ -130,6 +130,7 @@ jobs:
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          TEMP_DIR="temp"
           powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
           Remove-Item -Recurse -Force $TEMP_DIR
         fi
