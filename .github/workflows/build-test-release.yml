@@ -89,8 +89,6 @@ jobs:
         ARCHIVE_NAME="Team_Name-Game_Name_${VERSION_NAME}.zip"
         TEMP_DIR="release"
         OUTPUT_DIR="${TEMP_DIR}/Output"
-    
-        tree ${{ steps.strings.outputs.build-output-dir }}/../..
 
         mkdir -p $OUTPUT_DIR
         mv ${{ steps.strings.outputs.build-output-dir }}/../assets $OUTPUT_DIR/
