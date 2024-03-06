@@ -80,23 +80,14 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           ctest --build-config ${{ matrix.build_type }}
         fi
-    
-    - name: Setup Directory Structure
+
+    - name: Organize Artifacts
       shell: bash
       run: |
-        VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
-        OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
-        ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
-        TEMP_DIR="${{ github.workspace }}/release"
-        GAME_DIR="${TEMP_DIR}/Output"
-
-        mkdir -p $GAME_DIR/Assets
-        chmod -R 777 $GAME_DIR
-        chmod -R 777 $TEMP_DIR
-
-    - name: Move Files
-      shell: bash
-      run: |
+        GAME_DIR="release/game"
+        TEMP_DIR="release"
+        mkdir -p $GAME_DIR
+        mkdir -p $TEMP_DIR
         find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'game_name.exe' -exec mv {} $GAME_DIR/ \;
         find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'config.xml' -exec mv {} $GAME_DIR/ \;
         find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'save_game.xml' -exec mv {} $GAME_DIR/ \;
