@@ -132,7 +132,7 @@ jobs:
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           TEMP_DIR="temp" 
           powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
-          Remove-Item -Recurse -Force $TEMP_DIR
+          rm -rf $TEMP_DIR
         fi
 
     - name: Upload Artifacts
