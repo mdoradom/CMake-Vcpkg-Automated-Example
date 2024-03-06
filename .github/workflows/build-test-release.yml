@@ -84,17 +84,31 @@ jobs:
     - name: Organize Artifacts
       shell: bash
       run: |
-        GAME_DIR="release/game"
-        TEMP_DIR="release"
-        mkdir -p $GAME_DIR
-        mkdir -p $TEMP_DIR
-        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'game_name.exe' -exec mv {} $GAME_DIR/ \;
-        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'config.xml' -exec mv {} $GAME_DIR/ \;
-        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'save_game.xml' -exec mv {} $GAME_DIR/ \;
-        find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name '*.dll' -exec mv {} $GAME_DIR/ \;
-        find ${{ steps.strings.outputs.build-output-dir }}/.. -type d -name 'Assets' -exec cp -r {} $GAME_DIR/ \;
-        cp LICENSE $TEMP_DIR/
-        cp README.md $TEMP_DIR/
+        if [[ "$RUNNER_OS" == "Windows" ]]; then
+          GAME_DIR="release\\game"
+          TEMP_DIR="release"
+          mkdir $GAME_DIR
+          mkdir $TEMP_DIR
+          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'game_name.exe' | Move-Item -Destination $GAME_DIR
+          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'config.xml' | Move-Item -Destination $GAME_DIR
+          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'save_game.xml' | Move-Item -Destination $GAME_DIR
+          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter '*.dll' | Move-Item -Destination $GAME_DIR
+          Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\\.." -Filter 'Assets' -Directory | Copy-Item -Destination $GAME_DIR -Recurse
+          Copy-Item -Path LICENSE -Destination $TEMP_DIR
+          Copy-Item -Path README.md -Destination $TEMP_DIR
+        else
+          GAME_DIR="release/game"
+          TEMP_DIR="release"
+          mkdir -p $GAME_DIR
+          mkdir -p $TEMP_DIR
+          find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'game_name.exe' -exec mv {} $GAME_DIR/ \;
+          find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'config.xml' -exec mv {} $GAME_DIR/ \;
+          find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'save_game.xml' -exec mv {} $GAME_DIR/ \;
+          find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name '*.dll' -exec mv {} $GAME_DIR/ \;
+          find ${{ steps.strings.outputs.build-output-dir }}/.. -type d -name 'Assets' -exec cp -r {} $GAME_DIR/ \;
+          cp LICENSE $TEMP_DIR/
+          cp README.md $TEMP_DIR/
+        fi
 
     - name: Zip Artifacts
       shell: bash
