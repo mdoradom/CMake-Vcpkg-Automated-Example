@@ -91,29 +91,17 @@ jobs:
         OUTPUT_DIR="${TEMP_DIR}/Output"
 
         mkdir -p $OUTPUT_DIR
-        mv ${{ steps.strings.outputs.build-output-dir }}/../assets $OUTPUT_DIR/
-        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          mv ${{ steps.strings.outputs.build-output-dir }}/../game_name.exe $OUTPUT_DIR/
-        fi
-        mv ${{ steps.strings.outputs.build-output-dir }}/../config.xml $OUTPUT_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/../save_game.xml $OUTPUT_DIR/
-        mv ${{ steps.strings.outputs.build-output-dir }}/../*.dll $OUTPUT_DIR/
-    
-        cp LICENSE $TEMP_DIR/
-        cp README.md $TEMP_DIR/
-
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          mkdir $TEMP_DIR
-          mv ${{ steps.strings.outputs.build-output-dir }}/* $TEMP_DIR/
+          find ${{ steps.strings.outputs.build-output-dir }} -type f \( -name "*.dll" -o -name "*.exe" -o -name "*.xml" \) -exec mv {} $OUTPUT_DIR/ \;
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          mkdir $TEMP_DIR
-          mv ${{ steps.strings.outputs.build-output-dir }}/* $TEMP_DIR/
+          find ${{ steps.strings.outputs.build-output-dir }} -type f \( -name "*.dll" -o -name "*.exe" -o -name "*.xml" \) -exec mv {} $OUTPUT_DIR/ \;
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell Compress-Archive -Path "${{ steps.strings.outputs.build-output-dir }}" -DestinationPath $ARCHIVE_NAME
+          powershell -Command "Get-ChildItem -Path '${{ steps.strings.outputs.build-output-dir }}' -Include '*.dll', '*.exe', '*.xml' -File -Recurse | Move-Item -Destination '$OUTPUT_DIR'"
+          powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
         fi
 
     - name: Upload Artifacts
