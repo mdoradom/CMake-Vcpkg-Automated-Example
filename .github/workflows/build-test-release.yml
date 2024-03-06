@@ -91,7 +91,7 @@ jobs:
         OUTPUT_DIR="${TEMP_DIR}/Output"
     
         mkdir -p $OUTPUT_DIR
-        mv ${{ steps.strings.outputs.build-output-dir }}/Assets $OUTPUT_DIR/
+        mv ${{ steps.strings.outputs.build-output-dir }}/assets $OUTPUT_DIR/
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           mv ${{ steps.strings.outputs.build-output-dir }}/game_name.exe $OUTPUT_DIR/
         fi
