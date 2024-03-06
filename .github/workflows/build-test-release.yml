@@ -102,8 +102,8 @@ jobs:
       shell: pwsh
       run: |
         if ($env:RUNNER_OS -eq "Windows") {
-            $GAME_DIR="build\"
-            $TEMP_DIR="release"
+            $GAME_DIR="temp\build"
+            $TEMP_DIR="temp"
             New-Item -ItemType Directory -Force -Path $GAME_DIR
             New-Item -ItemType Directory -Force -Path $TEMP_DIR
             Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'game_name.exe' | Move-Item -Destination $GAME_DIR
@@ -114,7 +114,6 @@ jobs:
             Copy-Item -Path LICENSE -Destination $TEMP_DIR
             Copy-Item -Path README.md -Destination $TEMP_DIR
         }
-        
 
     - name: Zip Artifacts
       shell: bash
@@ -131,8 +130,8 @@ jobs:
           zip -r $ARCHIVE_NAME $TEMP_DIR
           rm -rf $TEMP_DIR
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          TEMP_DIR="build" 
           powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
+          Remove-Item -Recurse -Force $TEMP_DIR
         fi
 
     - name: Upload Artifacts
