@@ -85,7 +85,7 @@ jobs:
       shell: bash
       run: |
         if [[ "$RUNNER_OS" == "Windows" ]]; then
-          GAME_DIR="release\\game"
+          GAME_DIR="build\\game"
           TEMP_DIR="release"
           mkdir $GAME_DIR
           mkdir $TEMP_DIR
