@@ -87,7 +87,7 @@ jobs:
         VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
         OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
         ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
-        TEMP_DIR="temp_build"
+        TEMP_DIR="build"
 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           mkdir $TEMP_DIR
