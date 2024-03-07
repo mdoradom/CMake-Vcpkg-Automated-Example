@@ -155,29 +155,29 @@ jobs:
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/ubuntu/${{ steps.get_tag.outputs.TAG }}-ubuntu.zip
-        asset_name: ${{ steps.get_tag.outputs.TAG }}-ubuntu-release.zip
+        asset_path: ${{ github.workspace }}/build
+        asset_name: ${{ env.zip-name }}
         asset_content_type: application/zip
 
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/windows/${{ steps.get_tag.outputs.TAG }}-windows.zip
-        asset_name: ${{ steps.get_tag.outputs.TAG }}-windows-release.zip
+        asset_path: ${{ github.workspace }}/build
+        asset_name: ${{ env.zip-name }}
         asset_content_type: application/zip
 
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./artifacts/macos/${{ steps.get_tag.outputs.TAG }}-macos.zip
-        asset_name: ${{ steps.get_tag.outputs.TAG }}-macos-release.zip
+        asset_path: ${{ github.workspace }}/build
+        asset_name: ${{ env.zip-name }}
         asset_content_type: application/zip
