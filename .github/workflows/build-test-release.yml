@@ -117,7 +117,6 @@ jobs:
     - name: Download Artifacts
       uses: actions/download-artifact@v2
       with:
-        name: ${{ needs.build_and_test.outputs.zip-name }} # Modify this line
         path: ${{ github.workspace }}/build
 
     - name: Create Release
