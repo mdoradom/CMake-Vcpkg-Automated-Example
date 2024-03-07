@@ -86,15 +86,12 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          tree .
           cpack -G ZIP
           mv *.zip ${{ github.workspace }}/temp
         elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          tree .
           cpack -G ZIP
           mv *.zip ${{ github.workspace }}/temp
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          tree .
           cpack -G ZIP
           mv *.zip ${{ github.workspace }}/temp
         fi
