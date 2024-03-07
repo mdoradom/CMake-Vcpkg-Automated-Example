@@ -89,10 +89,12 @@ jobs:
         echo "zip-name=$(ls *.zip)" >> $GITHUB_ENV 
 
     - name: Upload Artifacts
+      env:
+        zip-name: ${{ env.zip-name }}
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ steps.strings.outputs.zip-name }}
-        path: ${{ github.workspace }}/Build/${{ steps.strings.outputs.zip-name }}
+        name: ${{ env.zip-name }}
+        path: ${{ github.workspace }}/Build/${{ env.zip-name }}
 
   release:
     needs: build_and_test
