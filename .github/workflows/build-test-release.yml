@@ -82,6 +82,7 @@ jobs:
         fi
 
     - name: Cpack
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
