@@ -150,11 +150,12 @@ jobs:
       
     - name: Extract tag name
       id: get_tag
-      run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+      run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -165,6 +166,7 @@ jobs:
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -175,6 +177,7 @@ jobs:
     - name: Upload Release Assets
       uses: actions/upload-release-asset@v1
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
