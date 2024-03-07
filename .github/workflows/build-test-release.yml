@@ -88,6 +88,9 @@ jobs:
         cpack -G ZIP
         echo "zip-name=$(ls *.zip)" >> $GITHUB_ENV 
 
+    - name: List files in Build directory
+      run: ls ${{ github.workspace }}/Build
+
     - name: Upload Artifacts
       env:
         zip-name: ${{ env.zip-name }}
