@@ -92,7 +92,7 @@ jobs:
       run: echo ${{ steps.strings.outputs.build-output-dir }}
 
     - name: List files in Build directory
-      run: ls ${{ github.workspace }}/Build
+      run: ls ${{ github.workspace }}/build
 
     - name: Upload Artifacts
       env:
@@ -100,7 +100,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.zip-name }}
-        path: ${{ github.workspace }}/Build
+        path: ${{ github.workspace }}/build
 
   release:
     needs: build_and_test
