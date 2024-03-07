@@ -86,13 +86,13 @@ jobs:
       shell: bash
       run: | 
         cpack -G ZIP
-        echo "::set-output name=zip-name::$(ls *.zip)"
+        echo "zip-name=$(ls *.zip)" >> $GITHUB_ENV
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: ${{ steps.strings.outputs.zip-name }}
-        path: ${{ github.workspace }}
+        path: ${{ github.workspace }}/${{ steps.strings.outputs.zip-name }}
 
   release:
     needs: build_and_test
