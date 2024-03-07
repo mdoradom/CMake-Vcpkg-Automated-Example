@@ -109,23 +109,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Download Artifacts Ubuntu
-      env:
-        zip-name: ${{ env.zip-name }}
-      uses: actions/download-artifact@v2
-      with:
-        name: ${{ env.zip-name }}
-        path: ${{ github.workspace }}/build
-
-    - name: Download Artifacts Windows
-      env:
-        zip-name: ${{ env.zip-name }}
-      uses: actions/download-artifact@v2
-      with:
-        name: ${{ env.zip-name }}
-        path: ${{ github.workspace }}/build
-
-    - name: Download Artifacts MacOS
+    - name: Download Artifacts
       env:
         zip-name: ${{ env.zip-name }}
       uses: actions/download-artifact@v2
@@ -152,7 +136,29 @@ jobs:
       id: get_tag
       run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-    - name: Upload Release Assets
+    - name: Upload Release Asset - Darwin
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        zip-name: ${{ env.zip-name }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build/${{ env.zip-name }}
+        asset_name: ${{ env.zip-name }}
+        asset_content_type: application/zip
+
+    - name: Upload Release Asset - Linux
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        zip-name: ${{ env.zip-name }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build/${{ env.zip-name }}
+        asset_name: ${{ env.zip-name }}
+        asset_content_type: application/zip
+
+    - name: Upload Release Asset - Windows
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
