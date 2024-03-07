@@ -26,4 +26,7 @@ target_link_libraries(Vcpkg-Project-Example PRIVATE $<IF:$<TARGET_EXISTS:SDL2_mi
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+include(InstallRequiredSystemLibraries)
 include(CPack)

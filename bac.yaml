@@ -1,0 +1,53 @@
+- name: Organize Artifacts non Windows
+      shell: bash
+      run: |
+          if [[ "$RUNNER_OS" != "Windows" ]]; then
+              GAME_DIR="release/game"
+              TEMP_DIR="release"
+              mkdir -p $GAME_DIR
+              mkdir -p $TEMP_DIR
+              find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'game_name.exe' -exec echo {} \; -exec mv {} $GAME_DIR/ \;
+              find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'config.xml' -exec echo {} \; -exec mv {} $GAME_DIR/ \;
+              find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name 'save_game.xml' -exec echo {} \; -exec mv {} $GAME_DIR/ \;
+              find ${{ steps.strings.outputs.build-output-dir }}/.. -type f -name '*.dll' -exec echo {} \; -exec mv {} $GAME_DIR/ \;
+              find ${{ steps.strings.outputs.build-output-dir }}/.. -type d -name 'Assets' -exec echo {} \; -exec cp -r {} $GAME_DIR/ \;
+              cp LICENSE $TEMP_DIR/
+              cp README.md $TEMP_DIR/
+          fi
+
+    - name: Organize Artifacts Windows
+      shell: pwsh
+      run: |
+        if ($env:RUNNER_OS -eq "Windows") {
+            $GAME_DIR="temp\build"
+            $TEMP_DIR="temp"
+            New-Item -ItemType Directory -Force -Path $GAME_DIR
+            New-Item -ItemType Directory -Force -Path $TEMP_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'game_name.exe' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'config.xml' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'save_game.xml' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter '*.dll' | Move-Item -Destination $GAME_DIR
+            Get-ChildItem -Path "${{ steps.strings.outputs.build-output-dir }}\.." -Filter 'Assets' -Directory | Copy-Item -Destination $GAME_DIR -Recurse
+            Copy-Item -Path LICENSE -Destination $TEMP_DIR
+            Copy-Item -Path README.md -Destination $TEMP_DIR
+        }
+      
+    - name: Zip Artifacts
+      shell: bash
+      run: |
+        VERSION_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's/\//-/g')
+        OS_NAME=$(echo ${{ matrix.os }} | sed 's/-latest//g')
+        ARCHIVE_NAME="${VERSION_NAME}-${OS_NAME}.zip"
+        TEMP_DIR="release"
+
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          zip -r $ARCHIVE_NAME $TEMP_DIR
+          rm -rf $TEMP_DIR
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          zip -r $ARCHIVE_NAME $TEMP_DIR
+          rm -rf $TEMP_DIR
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          TEMP_DIR="temp" 
+          powershell Compress-Archive -Path "$TEMP_DIR" -DestinationPath $ARCHIVE_NAME
+          rm -rf $TEMP_DIR
+        fi
