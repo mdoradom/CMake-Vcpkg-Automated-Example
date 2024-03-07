@@ -110,22 +110,28 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Download Artifacts Ubuntu
+      env:
+        zip-name: ${{ env.zip-name }}
       uses: actions/download-artifact@v2
       with:
-        name: output-artifacts-ubuntu-latest
-        path: artifacts/ubuntu
+        name: ${{ env.zip-name }}
+        path: ${{ github.workspace }}/build
 
     - name: Download Artifacts Windows
+      env:
+        zip-name: ${{ env.zip-name }}
       uses: actions/download-artifact@v2
       with:
-        name: output-artifacts-windows-latest
-        path: artifacts/windows
+        name: ${{ env.zip-name }}
+        path: ${{ github.workspace }}/build
 
     - name: Download Artifacts MacOS
+      env:
+        zip-name: ${{ env.zip-name }}
       uses: actions/download-artifact@v2
       with:
-        name: output-artifacts-macos-latest
-        path: artifacts/macos
+        name: ${{ env.zip-name }}
+        path: ${{ github.workspace }}/build
 
     - name: Create Release
       id: create_release
