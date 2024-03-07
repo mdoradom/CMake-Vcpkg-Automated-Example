@@ -100,7 +100,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: output-artifacts-${{ matrix.os }} 
-        path: ./*.zip
+        path: ${{ steps.strings.outputs.build-output-dir }}/*.zip
 
   release:
     needs: build_and_test
