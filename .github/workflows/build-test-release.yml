@@ -93,7 +93,7 @@ jobs:
           mv *.zip ${{ github.workspace }}/temp
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           cpack -G ZIP
-          mv *.zip ${{ github.workspace }}/temp
+          powershell Move-Item -Path *.zip -Destination "${{ github.workspace }}\temp"
         fi
 
     - name: Upload Artifacts
