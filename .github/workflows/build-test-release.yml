@@ -15,6 +15,8 @@ jobs:
           - windows-latest
           - macos-latest
         build_type: [Release]
+    outputs:
+      zip-name: ${{ steps.cpack.outputs.zip-name }} # Add this line
 
     steps:
     - name: Checkout Repository
@@ -82,11 +84,14 @@ jobs:
         fi
 
     - name: Cpack
+      id: cpack
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
       run: | 
         cpack -G ZIP
-        echo "zip-name=$(ls *.zip)" >> $GITHUB_ENV 
+        zip_name=$(ls *.zip)
+        echo "zip-name=$zip_name" >> $GITHUB_ENV 
+        echo "::set-output name=zip-name::$zip_name" # Add this line
 
     - name: Print build-output-dir
       run: echo ${{ steps.strings.outputs.build-output-dir }}
@@ -110,11 +115,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Download Artifacts
-      env:
-        zip-name: ${{ env.zip-name }}
       uses: actions/download-artifact@v2
       with:
-        name: ${{ env.zip-name }}
+        name: ${{ needs.build_and_test.outputs.zip-name }} # Modify this line
         path: ${{ github.workspace }}/build
 
     - name: Create Release
@@ -140,9 +143,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        zip-name: ${{ env.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build/${{ env.zip-name }}
-        asset_name: ${{ env.zip-name }}
+        asset_path: ${{ github.workspace }}/build/${{ needs.build_and_test.outputs.zip-name }} # Modify this line
+        asset_name: ${{ needs.build_and_test.outputs.zip-name }} # Modify this line
         asset_content_type: application/zip
