@@ -86,7 +86,7 @@ jobs:
       shell: bash
       run: | 
         cpack -G ZIP
-        echo "zip-name=$(ls *.zip)" >> $GITHUB_ENV
+        echo "zip-name=$(ls *.zip)" >> $GITHUB_ENV 
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
