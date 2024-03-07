@@ -96,6 +96,9 @@ jobs:
           powershell Move-Item -Path *.zip -Destination "${{ github.workspace }}\temp"
         fi
 
+        ls ${{ github.workspace }}/temp
+        tree ${{ github.workspace }}
+
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
