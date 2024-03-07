@@ -84,26 +84,15 @@ jobs:
     - name: Cpack
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
-      run: |
-        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cpack -G ZIP
-          mv *.zip ${{ github.workspace }}/temp
-        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cpack -G ZIP
-          mv *.zip ${{ github.workspace }}/temp
-        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cpack -G ZIP
-          powershell Move-Item -Path *.zip -Destination "${{ github.workspace }}\temp"
-        fi
-
-        ls ${{ github.workspace }}/temp
-        tree ${{ github.workspace }}
+      run: | 
+        cpack -G ZIP
+        echo "::set-output name=zip-name::$(ls *.zip)"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: output-artifacts-${{ matrix.os }} 
-        path: ${{ github.workspace }}/temp/*.zip
+        name: ${{ steps.strings.outputs.zip-name }}
+        path: ${{ github.workspace }}/*.zip
 
   release:
     needs: build_and_test
