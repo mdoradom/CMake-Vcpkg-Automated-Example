@@ -7,6 +7,8 @@ on:
 
 jobs:
   build_and_test:
+    outputs:
+      zip-name: ${{ steps.cpack.outputs.zip-name }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -111,10 +113,10 @@ jobs:
 
     - name: Download Artifacts
       env:
-        zip-name: ${{ env.zip-name }}
+        zip-name: ${{ needs.build_and_test.outputs.zip-name }}
       uses: actions/download-artifact@v2
       with:
-        name: ${{ env.zip-name }}
+        name: ${{ needs.build_and_test.outputs.zip-name }}
         path: ${{ github.workspace }}/build
 
     - name: Create Release
@@ -140,9 +142,9 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        zip-name: ${{ env.zip-name }}
+        zip-name: ${{ needs.build_and_test.outputs.zip-name }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build/${{ env.zip-name }}
-        asset_name: ${{ env.zip-name }}
+        asset_path: ${{ github.workspace }}/build/${{ needs.build_and_test.outputs.zip-name }}
+        asset_name: ${{ needs.build_and_test.outputs.zip-name }}
         asset_content_type: application/zip
