@@ -92,7 +92,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ steps.strings.outputs.zip-name }}
-        path: ${{ github.workspace }}/*.zip
+        path: ${{ github.workspace }}
 
   release:
     needs: build_and_test
