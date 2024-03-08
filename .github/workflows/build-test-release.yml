@@ -91,7 +91,7 @@ jobs:
         cpack -G ZIP
         zip_name=$(ls *.zip)
         echo "zip-name=$zip_name" >> $GITHUB_ENV 
-        echo "::set-output name=zip-name::$zip_name" # Add this line
+        echo "::set-output name=zip-name::$zip_name"
 
     - name: Print build-output-dir
       run: echo ${{ steps.strings.outputs.build-output-dir }}
