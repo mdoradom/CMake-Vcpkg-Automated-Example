@@ -91,7 +91,7 @@ jobs:
           pwsh -c "$zip_name = (Get-ChildItem -Filter *.zip | Select-Object -ExpandProperty Name); Write-Host 'zip-name='$zip_name | Out-File -FilePath $env:GITHUB_ENV -Append"          pwsh -c "Write-Host 'zip-name=$zip_name' | Out-File -FilePath $env:GITHUB_ENV -Append"
           pwsh -c "Write-Host 'Zip file details:'"
           pwsh -c "Write-Host 'Name: $zip_name'"
-          pwsh -c "Expand-Archive -Path $zip_name -DestinationPath test_zip -Force"
+          pwsh -c "Expand-Archive -Path $zip_name -DestinationPath test_zip -Force" 
         fi
 
     - name: List files in Build directory
