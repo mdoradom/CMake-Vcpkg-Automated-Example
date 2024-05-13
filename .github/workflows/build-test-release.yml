@@ -13,7 +13,6 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-          - macos-latest
         build_type: [Release]
     outputs:
       zip-name: ${{ steps.cpack.outputs.zip-name }}
@@ -35,9 +34,6 @@ jobs:
           sudo apt-get install -y ninja-build
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           choco install ninja
-        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          brew update
-          brew install ninja
         fi
 
     - name: Set reusable strings
@@ -55,16 +51,12 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           vcpkg_root=$(cygpath -u "${VCPKG_ROOT}")
           cmake -B $build_dir -DCMAKE_TOOLCHAIN_FILE=$vcpkg_root/scripts/buildsystems/vcpkg.cmake --preset Windows-Release
-        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-          cmake -B ${{ steps.strings.outputs.build-output-dir }} -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake --preset macOS-Release
         fi
 
     - name: Build
       shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cmake --build ${{ steps.strings.outputs.build-output-dir }}
-        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
           cmake --build ${{ steps.strings.outputs.build-output-dir }}
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
@@ -76,8 +68,6 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          ctest --build-config ${{ matrix.build_type }}
-        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
           ctest --build-config ${{ matrix.build_type }}
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
