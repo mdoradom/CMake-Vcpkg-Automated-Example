@@ -90,7 +90,7 @@ jobs:
       run: | 
         cpack -G ZIP
         zip_name=$(ls *.zip)
-        echo "zip-name=$zip_name" >> $GITHUB_ENV
+        echo "zip-name=$zip_name" >> $GITHUB_ENV 
 
     - name: List files in Build directory
       run: ls ${{ github.workspace }}/build
