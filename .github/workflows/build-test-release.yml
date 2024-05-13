@@ -87,10 +87,12 @@ jobs:
           file $zip_name
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          pwsh -c "Compress-Archive -Path * -DestinationPath package.zip"
-          pwsh -c "$zip_name = (Get-ChildItem -Filter *.zip | Select-Object -ExpandProperty Name); if ($null -ne $zip_name) { Write-Host ('zip-name=' + $zip_name) | Out-File -FilePath $env:GITHUB_ENV -Append }"
-          pwsh -c "Write-Host ('Zip file details:' + $zip_name)"
-          pwsh -c "Expand-Archive -Path $zip_name -DestinationPath test_zip -Force" 
+          cpack -G ZIP
+          zip_name=$(ls *.zip)
+          echo "zip-name=$zip_name" >> $GITHUB_ENV
+          echo "Zip file details:"
+          file $zip_name
+          unzip -t $zip_name
         fi
 
     - name: List files in Build directory
