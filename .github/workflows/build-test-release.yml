@@ -91,9 +91,6 @@ jobs:
         cpack -G ZIP
         zip_name=$(ls *.zip)
         echo "zip-name=$zip_name" >> $GITHUB_ENV
-        echo "Zip file details:"
-        file $zip_name
-        unzip -t $zip_name
 
     - name: List files in Build directory
       run: ls ${{ github.workspace }}/build
