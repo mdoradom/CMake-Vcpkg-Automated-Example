@@ -76,18 +76,17 @@ jobs:
 
     - name: Cpack
       id: cpack
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
       run: | 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          zip -r package.zip .
+          zip -r package.zip README.md LICENSE build/Assets/* build/*.dll build/*.csv build/*.exe build/*.xml
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
           echo "Zip file details:"
           file $zip_name
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cpack -G ZIP
+          powershell -Command "Compress-Archive -Path README.md, LICENSE, build/Assets/*, build/*.dll, build/*.csv, build/*.exe, build/*.xml -DestinationPath package.zip"
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
           echo "Zip file details:"
