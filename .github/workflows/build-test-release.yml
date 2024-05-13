@@ -79,12 +79,21 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
       run: | 
-        zip -r package.zip .
-        zip_name=$(ls *.zip)
-        echo "zip-name=$zip_name" >> $GITHUB_ENV
-        echo "Zip file details:"
-        file $zip_name
-        unzip -t $zip_name
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          zip -r package.zip .
+          zip_name=$(ls *.zip)
+          echo "zip-name=$zip_name" >> $GITHUB_ENV
+          echo "Zip file details:"
+          file $zip_name
+          unzip -t $zip_name
+        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          Compress-Archive -Path * -DestinationPath package.zip
+          $zip_name = Get-ChildItem -Filter *.zip | Select-Object -ExpandProperty Name
+          Write-Host "zip-name=$zip_name" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Host "Zip file details:"
+          Write-Host "Name: $zip_name"
+          Expand-Archive -Path $zip_name -DestinationPath test_zip -Force
+        fi
 
     - name: List files in Build directory
       run: ls ${{ github.workspace }}/build
