@@ -88,9 +88,8 @@ jobs:
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           pwsh -c "Compress-Archive -Path * -DestinationPath package.zip"
-          pwsh -c "$zip_name = (Get-ChildItem -Filter *.zip | Select-Object -ExpandProperty Name); Write-Host 'zip-name='$zip_name | Out-File -FilePath $env:GITHUB_ENV -Append"          pwsh -c "Write-Host 'zip-name=$zip_name' | Out-File -FilePath $env:GITHUB_ENV -Append"
-          pwsh -c "Write-Host 'Zip file details:'"
-          pwsh -c "Write-Host 'Name: $zip_name'"
+          pwsh -c "$zip_name = (Get-ChildItem -Filter *.zip | Select-Object -ExpandProperty Name); Write-Host ('zip-name=' + $zip_name) | Out-File -FilePath $env:GITHUB_ENV -Append"
+          pwsh -c "Write-Host ('Zip file details:' + $zip_name)"
           pwsh -c "Expand-Archive -Path $zip_name -DestinationPath test_zip -Force" 
         fi
 
