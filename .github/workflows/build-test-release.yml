@@ -79,7 +79,7 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
       run: | 
-        cpack -G ZIP
+        zip -r package.zip .
         zip_name=$(ls *.zip)
         echo "zip-name=$zip_name" >> $GITHUB_ENV
         echo "Zip file details:"
