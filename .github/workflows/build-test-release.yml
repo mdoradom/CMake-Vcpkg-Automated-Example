@@ -74,19 +74,20 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
+        TODO ARREGLAR ESTE PASO PARA QUE FUNCIONE EN WINDOWS
     - name: Cpack
       id: cpack
       shell: bash
       run: | 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          zip -r package.zip README.md LICENSE **/Assets/* build/*.dll build/*.csv build/*.exe build/*.xml
+          zip -r package.zip README.md LICENSE **/Assets/* **/*.dll *.csv **/*.exe **/*.xml
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
           echo "Zip file details:"
           file $zip_name
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell -Command "Compress-Archive -Path README.md LICENSE **/Assets/* build/*.dll build/*.csv build/*.exe build/*.xml -DestinationPath package.zip"
+          powershell -Command "Compress-Archive -Path README.md LICENSE **/Assets/* **/*.dll *.csv **/*.exe **/*.xml -DestinationPath package.zip"
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
           echo "Zip file details:"
