@@ -74,34 +74,18 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
-    - name: List files before packaging
-      run: ls -R
-
     - name: Cpack
       id: cpack
       shell: bash
       run: | 
-        if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          cd ${{ steps.strings.outputs.build-output-dir }}
-          zip -r package.zip *
-          zip_name=$(ls *.zip)
-          echo "zip-name=$zip_name" >> $GITHUB_ENV
-          echo "Zip file details:"
-          file $zip_name
-          unzip -t $zip_name
-        elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
-          cd $build_dir
-          cpack -G ZIP
-          zip_name=$(ls *.zip)
-          echo "zip-name=$zip_name" >> $GITHUB_ENV
-          echo "Zip file details:"
-          file $zip_name
-          unzip -t $zip_name
-        fi
-
-    - name: List files after packaging
-      run: ls -R
+        build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
+        cd $build_dir
+        cpack -G ZIP
+        zip_name=$(ls *.zip)
+        echo "zip-name=$zip_name" >> $GITHUB_ENV
+        echo "Zip file details:"
+        file $zip_name
+        unzip -t $zip_name
 
     - name: Upload Artifacts
       env:
@@ -121,10 +105,7 @@ jobs:
     - name: Download Artifacts
       uses: actions/download-artifact@v2
       with:
-        path: ${{ github.workspace }}/build 
-
-    - name: List files before release
-      run: ls -R
+        path: ${{ github.workspace }}/build
 
     - name: Create Release
       id: create_release
