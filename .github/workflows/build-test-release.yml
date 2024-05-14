@@ -109,6 +109,27 @@ jobs:
       with:
         path: ${{ github.workspace }}/build
 
+    - name: List Directory Contents
+      shell: bash
+      run: |
+        cd ${{ github.workspace }}/build
+        echo "Current directory: $(pwd)"
+        echo "Directory contents:"
+        ls -l
+
+    - name: Calculate Checksum
+      shell: bash
+      run: |
+        cd ${{ github.workspace }}/build
+        for zip_name in *.zip; do
+          if [[ -f "$zip_name" ]]; then
+            echo "Checksum for $zip_name:"
+            sha256sum "$zip_name"
+          else
+            echo "$zip_name does not exist or is not a regular file."
+          fi
+        done
+
     - name: Calculate Checksum
       shell: bash
       run: |
