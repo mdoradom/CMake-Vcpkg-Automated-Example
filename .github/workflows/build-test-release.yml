@@ -94,9 +94,14 @@ jobs:
       shell: bash
       run: |
         cd ${{ github.workspace }}/build
-        zip -r build.zip .
-        echo "Checksum before upload:"
-        sha256sum build.zip
+        for dir in */; do
+          base=$(basename "$dir")
+          zip -r "${base}.zip" "$dir"
+        done
+        echo "Checksums before upload:"
+        for zipped in *.zip; do
+          sha256sum "$zipped"
+        done
 
     - name: Create Release
       id: create_release
