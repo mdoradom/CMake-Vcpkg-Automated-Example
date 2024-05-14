@@ -76,7 +76,7 @@ jobs:
 
     - name: Cpack
       id: cpack
-      shell: bash
+      shell: bash 
       run: |
         build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
         cd $build_dir
