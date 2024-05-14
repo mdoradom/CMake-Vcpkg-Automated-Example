@@ -90,7 +90,8 @@ jobs:
           file $zip_name
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          cd ${{ steps.strings.outputs.build-output-dir }}
+          build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
+          cd $build_dir
           cpack -G ZIP
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
