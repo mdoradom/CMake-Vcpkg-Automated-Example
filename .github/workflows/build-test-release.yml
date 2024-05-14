@@ -73,24 +73,20 @@ jobs:
           build_dir=$(cygpath -u "${{ steps.strings.outputs.build-output-dir }}")
           ctest --build-config ${{ matrix.build_type }}
         fi
-
+        
     - name: Cpack
       id: cpack
       shell: bash
       run: | 
-        build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
-        cd $build_dir
-        cpack -G ZIP
-        if [[ $? -ne 0 ]]; then
-          echo "cpack command failed"
-          exit 1
-        fi
-        ls -l
+        cd ${{ steps.strings.outputs.build-output-dir }}
+        zip -r package.zip *
         zip_name=$(ls *.zip)
         echo "zip-name=$zip_name" >> $GITHUB_ENV
         echo "Zip file details:"
         file $zip_name
         unzip -t $zip_name
+
+
     - name: Upload Artifacts
       env:
         zip-name: ${{ env.zip-name }}
