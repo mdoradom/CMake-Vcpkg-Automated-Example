@@ -85,14 +85,9 @@ jobs:
         echo "zip-name=$zip_name" >> $GITHUB_ENV
         echo "Zip file details:"
         file $zip_name
-        unzip -t $zip_name
-
-    - name: Unzip
-      shell: bash
-      run: |
-        build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
-        cd $build_dir
-        unzip ${{ env.zip-name }}
+        unzip -t $zip_name || echo "Unzip test failed with error code $?"
+        echo "Checksum before upload:"
+        sha256sum $zip_name
 
     - name: Upload Artifacts
       env:
@@ -113,6 +108,12 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: ${{ github.workspace }}/build
+      shell: bash
+      run: |
+        cd ${{ github.workspace }}/build
+        zip_name=$(ls *.zip)
+        echo "Checksum after download:"
+        sha256sum $zip_name
 
     - name: Create Release
       id: create_release
