@@ -113,9 +113,14 @@ jobs:
       shell: bash
       run: |
         cd ${{ github.workspace }}/build
-        zip_name=$(ls *.zip)
-        echo "Checksum after download:"
-        sha256sum $zip_name
+        for zip_name in *.zip; do
+          if [[ -f "$zip_name" ]]; then
+            echo "Checksum for $zip_name:"
+            sha256sum "$zip_name"
+          else
+            echo "$zip_name does not exist or is not a regular file."
+          fi
+        done
 
     - name: Create Release
       id: create_release
