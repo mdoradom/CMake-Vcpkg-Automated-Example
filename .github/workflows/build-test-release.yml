@@ -14,8 +14,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
         build_type: [Release]
-    outputs:
-      zip-name: ${{ steps.cpack.outputs.zip-name }}
 
     steps:
     - name: Checkout Repository
@@ -74,27 +72,10 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
-    - name: Cpack
-      id: cpack
-      shell: bash 
-      run: |
-        build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
-        cd $build_dir
-        cpack -G ZIP
-        zip_name=$(ls *.zip)
-        echo "zip-name=$zip_name" >> $GITHUB_ENV
-        echo "Zip file details:"
-        file $zip_name
-        unzip -t $zip_name || echo "Unzip test failed with error code $?"
-        echo "Checksum before upload:"
-        sha256sum $zip_name
-
     - name: Upload Artifacts
-      env:
-        zip-name: ${{ env.zip-name }}
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.zip-name }}
+        name: build
         path: ${{ github.workspace }}/build
 
   release:
@@ -107,20 +88,15 @@ jobs:
     - name: Download Artifacts
       uses: actions/download-artifact@v2
       with:
-        path: ${{ github.workspace }}/artifacts
+        path: ${{ github.workspace }}
 
-    - name: Calculate Checksum
+    - name: Zip Artifacts
       shell: bash
       run: |
-        cd ${{ github.workspace }}/artifacts
-        for zip_name in *.zip; do
-          if [[ -f "$zip_name" ]]; then
-            echo "Checksum for $zip_name:"
-            sha256sum "$zip_name"
-          else
-            echo "$zip_name does not exist or is not a regular file."
-          fi
-        done
+        cd ${{ github.workspace }}/build
+        zip -r build.zip .
+        echo "Checksum before upload:"
+        sha256sum build.zip
 
     - name: Create Release
       id: create_release
@@ -150,16 +126,13 @@ jobs:
           const path = require('path');
           const upload_url = "${{ steps.create_release.outputs.upload_url }}";
           const buildDir = "${{ github.workspace }}/build";
-          fs.readdirSync(buildDir).forEach(file => {
-            if (path.extname(file) === '.zip') {
-              github.repos.uploadReleaseAsset({
-                url: upload_url,
-                headers: {
-                  'content-length': fs.statSync(path.join(buildDir, file)).size,
-                  'content-type': 'application/zip',
-                },
-                name: path.basename(file),
-                file: fs.createReadStream(path.join(buildDir, file))
-              });
-            }
+          const zipFile = path.join(buildDir, 'build.zip');
+          github.repos.uploadReleaseAsset({
+            url: upload_url,
+            headers: {
+              'content-length': fs.statSync(zipFile).size,
+              'content-type': 'application/zip',
+            },
+            name: path.basename(zipFile),
+            file: fs.createReadStream(zipFile)
           });
