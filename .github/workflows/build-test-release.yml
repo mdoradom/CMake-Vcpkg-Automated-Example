@@ -109,14 +109,6 @@ jobs:
       with:
         path: ${{ github.workspace }}/artifacts
 
-    - name: List Directory Contents
-      shell: bash
-      run: |
-        cd ${{ github.workspace }}/build
-        echo "Current directory: $(pwd)"
-        echo "Directory contents:"
-        ls -l
-
     - name: Calculate Checksum
       shell: bash
       run: |
