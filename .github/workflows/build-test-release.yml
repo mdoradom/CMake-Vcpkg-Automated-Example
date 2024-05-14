@@ -90,7 +90,8 @@ jobs:
     - name: Unzip
       shell: bash
       run: |
-        cd ${{ github.workspace }}/build
+        build_dir=$(echo "${{ steps.strings.outputs.build-output-dir }}" | tr '\\' '/')
+        cd $build_dir
         unzip ${{ env.zip-name }}
 
     - name: Upload Artifacts
