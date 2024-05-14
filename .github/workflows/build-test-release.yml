@@ -90,6 +90,7 @@ jobs:
     - name: Unzip
       shell: bash
       run: |
+        cd ${{ github.workspace }}/build
         unzip ${{ env.zip-name }}
 
     - name: Upload Artifacts
