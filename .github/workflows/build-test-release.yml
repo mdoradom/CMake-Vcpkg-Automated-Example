@@ -74,7 +74,9 @@ jobs:
           ctest --build-config ${{ matrix.build_type }}
         fi
 
-        TODO ARREGLAR ESTE PASO PARA QUE FUNCIONE EN WINDOWS
+    - name: List files before packaging
+      run: ls -R
+
     - name: Cpack
       id: cpack
       shell: bash
@@ -87,7 +89,7 @@ jobs:
           file $zip_name
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-          powershell -Command "Compress-Archive -Path README.md LICENSE **/Assets/* **/*.dll *.csv **/*.exe **/*.xml -DestinationPath package.zip"
+          cpack -G ZIP
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
           echo "Zip file details:"
@@ -95,8 +97,8 @@ jobs:
           unzip -t $zip_name
         fi
 
-    - name: List files in Build directory
-      run: ls ${{ github.workspace }}/build
+    - name: List files after packaging
+      run: ls -R
 
     - name: Upload Artifacts
       env:
@@ -117,6 +119,9 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: ${{ github.workspace }}/build
+
+    - name: List files before release
+      run: ls -R
 
     - name: Create Release
       id: create_release
