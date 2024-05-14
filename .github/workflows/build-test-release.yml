@@ -82,13 +82,15 @@ jobs:
       shell: bash
       run: | 
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-          zip -r package.zip README.md LICENSE **/Assets/* **/*.dll *.csv **/*.exe **/*.xml
+          cd ${{ steps.strings.outputs.build-output-dir }}
+          zip -r package.zip *
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
           echo "Zip file details:"
           file $zip_name
           unzip -t $zip_name
         elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          cd ${{ steps.strings.outputs.build-output-dir }}
           cpack -G ZIP
           zip_name=$(ls *.zip)
           echo "zip-name=$zip_name" >> $GITHUB_ENV
