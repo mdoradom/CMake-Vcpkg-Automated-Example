@@ -108,6 +108,8 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         path: ${{ github.workspace }}/build
+
+    - name: Calculate Checksum
       shell: bash
       run: |
         cd ${{ github.workspace }}/build
